@@ -24,8 +24,7 @@ class Walker {
     point(this.x, this.y);
   }
 
-  // Give the walker a greater tendency to move down and left by making
-  // the random range larger in that direction
+  // tweaking the xstep and ystep variables to shift the midpoint to the left and down 
   step() {
     let xstep = random(-1.5, 1);
     let ystep = random(-1.5, 1);
