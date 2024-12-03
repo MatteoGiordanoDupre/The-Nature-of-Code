@@ -1,0 +1,47 @@
+let walker;
+
+function setup() {
+  createCanvas(640, 240);
+  walker = new Walker();
+  background(255);
+}
+
+function draw() {
+  walker.step();
+  walker.show();
+}
+
+class Walker {
+  constructor() {
+    this.x = width / 2;
+    this.y = height / 2;
+  }
+
+  show() {
+    stroke(0);
+    point(this.x, this.y);
+  }
+
+  step() {
+    // Randomly choose 0 or 1
+    let counter = floor(random(2)); // Randomly 0 or 1
+
+    if (counter === 0) {
+      // Move toward the mouse
+      let dx = mouseX - this.x;
+      let dy = mouseY - this.y;
+      let mag = sqrt(dx * dx + dy * dy); // Distance to mouse
+      let xstep = (dx / mag) * random(1); // Scaled step toward mouse
+      let ystep = (dy / mag) * random(1); // Scaled step toward mouse
+      this.x += xstep;
+      this.y += ystep;
+    } else {
+      // Random movement
+      let xstep = random(-1.5, 1.5);
+      let ystep = random(-1.5, 1.5);
+      this.x += xstep;
+      this.y += ystep;
+    }
+  }
+}
+
