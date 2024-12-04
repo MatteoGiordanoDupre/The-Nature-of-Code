@@ -26,8 +26,8 @@ class Walker {
   }
 
   step() {
-    let xstep = randomGaussian(0, 1);
-    let ystep = randomGaussian(0, 1);
+    let xstep = randomGaussian(0, 5); //using randomGaussian with different parameters
+    let ystep = randomGaussian(0, 5);
     this.x += xstep;
     this.y += ystep;
   }
