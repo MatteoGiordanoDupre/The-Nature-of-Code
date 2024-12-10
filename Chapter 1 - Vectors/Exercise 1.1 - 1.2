@@ -1,0 +1,47 @@
+// Exercise asks to take one of the random walkers from Chapter 0 and implement it using vectors. 
+//I also tried to be more specific with the comments to make the whole code clearer. 
+
+let walker;
+
+function setup() {
+  createCanvas(640, 240); // creating canvas of size 640 x 240
+  walker = new Walker(); // creating an instance/object of class Walker
+  background(255);
+}
+
+function draw() {
+  walker.step();
+  walker.show();
+}
+
+class Walker {
+  constructor() {
+    this.position = createVector(width / 2, height / 2);
+    this.oldposition = this.position.copy(); // Make a copy of the position
+    this.speed = createVector(0, 0);
+    this.t = createVector(0, 1000); // Initialize Perlin noise time
+  }
+
+  step() {
+    // Update speed based on Perlin noise
+    this.speed.x += map(noise(this.t.x), 0, 1, -1, 1);
+    this.speed.y += map(noise(this.t.y), 0, 1, -1, 1);
+    
+    // Update position based on speed
+    this.position.x += this.speed.x;
+    this.position.y += this.speed.y;
+    
+    // Increment Perlin noise time
+    this.t.x += 0.01;
+    this.t.y += 0.01;
+  }
+
+  show() {
+    // Draw a line from the previous position to the current position
+    stroke(0);
+    line(this.oldposition.x, this.oldposition.y, this.position.x, this.position.y);
+    
+    // Update the oldposition to the current position
+    this.oldposition = this.position.copy();
+  }
+}
