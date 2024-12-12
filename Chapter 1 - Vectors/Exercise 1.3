@@ -1,3 +1,9 @@
+//Exercise suggested getting a ball to bounce around a box. Code was pretty straightforward
+//but the ball seems to overpass one of the walls, making it look a little fake. Not sure why.
+//Also used a for loop instead of coding the bouncing off of each wall. Feels like a more elegant/less
+//repetitive solution. 
+
+
 let container, ball;
 
 class Container {
@@ -55,18 +61,17 @@ class Ball {
 
 function setup() {
     createCanvas(800, 800, WEBGL);
-    container = new Container(400, 400, 400); // Initialize a container of 
-size 400x400x400
-    ball = new Ball(); // Initialize a ball at the center with random 
+    container = new Container(400, 400, 400); // initialize container 
+    ball = new Ball(); // initialize ball at center with random 
 velocity
 }
 
 function draw() {
     background(0);
-    container.draw(); // Render the container
-    ball.move(); // Update the ball's position
+    container.draw(); // rendering container
+    ball.move(); // update ball's position
     ball.bouncing(container.sizeX, container.sizeY, container.sizeZ); // 
 Check for collisions
-    ball.draw(); // Render the ball
+    ball.draw(); // render ball
 }
 
