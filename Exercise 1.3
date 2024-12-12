@@ -1,0 +1,72 @@
+let container, ball;
+
+class Container {
+    constructor(sizeX, sizeY, sizeZ) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.sizeZ = sizeZ;
+    }
+
+    draw() {
+        push();
+        noFill();
+        stroke(255);
+        box(this.sizeX, this.sizeY, this.sizeZ); // p5.js box() function
+        pop();
+    }
+}
+
+class Ball {
+    constructor(x = 0, y = 0, z = 0, vx = random(-3, 3), vy = random(-3, 
+3), vz = random(-3, 3)) {
+        this.position = createVector(x, y, z);
+        this.velocity = createVector(vx, vy, vz);
+    }
+
+    move() {
+        this.position.add(this.velocity);
+    }
+
+    bouncing(sizeX, sizeY, sizeZ) {
+        let sizes = [sizeX, sizeY, sizeZ];
+        let pos = [this.position.x, this.position.y, this.position.z];
+        let vel = [this.velocity.x, this.velocity.y, this.velocity.z];
+
+        for (let i = 0; i < 3; i++) {
+            if (pos[i] > sizes[i] / 2 || pos[i] < -sizes[i] / 2) {
+                vel[i] *= -1;
+            }
+        }
+
+        this.velocity.x = vel[0];
+        this.velocity.y = vel[1];
+        this.velocity.z = vel[2];
+    }
+
+    draw() {
+        push();
+        fill(255, 0, 0);
+        noStroke();
+        translate(this.position.x, this.position.y, this.position.z);
+        sphere(20); // Ball radius
+        pop();
+    }
+}
+
+function setup() {
+    createCanvas(800, 800, WEBGL);
+    container = new Container(400, 400, 400); // Initialize a container of 
+size 400x400x400
+    ball = new Ball(); // Initialize a ball at the center with random 
+velocity
+}
+
+function draw() {
+    background(0);
+    container.draw(); // Render the container
+    ball.move(); // Update the ball's position
+    ball.bouncing(container.sizeX, container.sizeY, container.sizeZ); // 
+Check for collisions
+    ball.draw(); // Render the ball
+}
+
