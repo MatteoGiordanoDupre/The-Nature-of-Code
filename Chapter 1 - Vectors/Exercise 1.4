@@ -1,0 +1,16 @@
+// Write the limit() function for the p5.Vector class
+
+//easy easy exercise. It's about creating an if statement that checks if the magnitude of the given vector goes beyond the argument.
+//If it does, we normalize the vector and multiply it by the argument, so that its value stays capped.
+//Solution i thought of is exactly the same solution as the site's one, but i wonder if there are other ones. This looks like the most efficient. 
+
+
+
+  limit(max) {
+    if (this.mag() > max) {
+      this.normalize();
+      this.mult(max);
+    }
+  }
+
+
