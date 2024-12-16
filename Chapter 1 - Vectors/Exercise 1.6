@@ -1,15 +1,11 @@
-//Create a simulation of an object (think about a vehicle) that accelerates when you press the 
-//up arrow and brakes when you press the down arrow.
+// Referring back to Example 0.6, implement an acceleration calculated with Perlin noise.
 
-// I used the Mover code and changed the update() method to accelerate when pressing the arrows. The 
-// acceleration values can be changed to make it move in specific directions. 
-
-
+// i added the seeds and offsets needed for the noise() function and then used them to define acceleration
 
 let mover;
 
 function setup() {
-  createCanvas(640, 240);
+  createCanvas(1000, 1000);
   // Create the Mover object.
   mover = new Mover();
 }
@@ -24,12 +20,25 @@ function draw() {
 class Mover {
   constructor() {
     this.position = createVector(width / 2, height / 2);
-    this.velocity = createVector(0, 0); // Initial velocity for movement.
-    this.acceleration = createVector(noise(1), noise(1000);
+    this.velocity = createVector(0, 0); 
+    this.tx = 0; 
+    this.ty = 1000; 
+    this.acceleration = createVector(0, 0);
     this.topSpeed = 10;
   }
 
   update() {
+    // update time offsets
+    this.tx += 0.01;
+    this.ty += 0.01;
+
+    // perlin noise values for acceleration
+    let ax = map(noise(this.tx), 0, 1, -1, 1);
+    let ay = map(noise(this.ty), 0, 1, -1, 1);
+
+    this.acceleration.set(ax, ay);
+
+    
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.topSpeed);
     this.position.add(this.velocity);
