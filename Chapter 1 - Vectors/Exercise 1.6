@@ -25,21 +25,12 @@ class Mover {
   constructor() {
     this.position = createVector(width / 2, height / 2);
     this.velocity = createVector(0, 0); // Initial velocity for movement.
-    this.acceleration = createVector(0.01, 0.01);
+    this.acceleration = createVector(noise(1), noise(1000);
     this.topSpeed = 10;
   }
 
   update() {
-    // Handle input for acceleration.
-    if (keyIsDown(UP_ARROW)) {
-      this.velocity.add(this.acceleration)
-    
-    } else if (keyIsDown(DOWN_ARROW)) {
-      this.velocity.sub(this.acceleration)
-    }
-    
-   
-
+    this.velocity.add(this.acceleration);
     this.velocity.limit(this.topSpeed);
     this.position.add(this.velocity);
   }
