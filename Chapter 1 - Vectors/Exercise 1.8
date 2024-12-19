@@ -35,7 +35,7 @@ update() {
   let dir = p5.Vector.sub(mouse, this.position); 
   let distance = dir.mag(); 
   
-  dir.setMag(map(distance, 0, width, 0.1, 2)); 
+  dir.setMag(map(distance, 0, width, 0.1, 9)); 
   
   this.acceleration = dir; 
   this.velocity.add(this.acceleration); 
