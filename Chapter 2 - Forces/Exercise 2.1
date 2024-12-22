@@ -1,61 +1,72 @@
 //Using forces, simulate a helium-filled balloon floating upward and bouncing off the top of a window. 
 //Can you add a wind force that changes over time, perhaps according to Perlin noise?
 
-let mover;
+
+let balloon;
+let windSlider;
 
 function setup() {
-  createCanvas(640, 240);
-  
-  mover = new Mover();
+  createCanvas(600, 600);
+  balloon = new Balloon(width / 2, height - 100);
+  windSlider = createSlider(-2, 2, 0, 0.1);
+  windSlider.position(20, height + 20);
 }
 
 function draw() {
-  background(255);
-  mover.update();
-  mover.checkEdges();
-  mover.show();
-}
+  background(135, 206, 250);
 
-class Mover {
-  constructor() {
-    this.position = createVector(width / 2, height / 2);
-    this.velocity = createVector(0, 0); 
-    this.acceleration = createVector(0.01, 0.01);
-    this.topSpeed = 10;
+  let wind = windSlider.value();
+  if (abs(wind) < 0.2) { // Add resistance near the center
+    wind = 0;
+    windSlider.value(0);
   }
 
-update() {
-  let mouse = createVector(mouseX, mouseY);
-  let dir = p5.Vector.sub(mouse, this.position); 
-  let distance = dir.mag(); 
+  balloon.applyForce(wind, -0.1); // Upward and wind force
   
-  dir.setMag(map(distance, 0, width, 0.5, 0.1)); 
+  balloon.update();
+  balloon.display();
   
-  this.acceleration = dir; 
-  this.velocity.add(this.acceleration); 
-  this.velocity.limit(this.topSpeed); 
-  this.position.add(this.velocity); 
+  fill(0);
+  text("Wind: " + wind.toFixed(1), windSlider.x * 2 + windSlider.width, height + 35);
 }
 
-    
-  show() {
-    stroke(0);
-    strokeWeight(2);
-    fill(127);
-    circle(this.position.x, this.position.y, 48);
+class Balloon {
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+    this.size = 60;
   }
 
-  checkEdges() {
-    if (this.position.x > width) {
-      this.position.x = 0;
-    } else if (this.position.x < 0) {
-      this.position.x = width;
+  applyForce(forceX, forceY) {
+    this.acceleration.add(forceX, forceY);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+
+    // Add some friction to slow down over time
+    this.velocity.mult(0.99);
+
+    // Bounce off the walls
+    if (this.position.x > width - this.size / 2 || this.position.x < this.size / 2) {
+      this.velocity.x *= -1;
+      this.position.x = constrain(this.position.x, this.size / 2, width - this.size / 2);
     }
 
-    if (this.position.y > height) {
-      this.position.y = 0;
-    } else if (this.position.y < 0) {
-      this.position.y = height;
+    if (this.position.y < this.size / 2) {
+      this.velocity.y *= -1;
+      this.position.y = this.size / 2;
     }
+  }
+
+  display() {
+    fill(255, 0, 127);
+    ellipse(this.position.x, this.position.y, this.size, this.size * 1.2);
+
+    stroke(100);
+    line(this.position.x, this.position.y + this.size * 0.6, this.position.x, this.position.y + this.size * 1.5);
   }
 }
