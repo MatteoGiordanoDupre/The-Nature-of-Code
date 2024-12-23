@@ -1,3 +1,7 @@
+//this is a basic template for a Mover class. The Mover bounces around the edges instead of wrapping. 
+//I keep the code here for reference. 
+
+
 class Mover {
   constructor() {
     //{!1} For now, set the mass equal to 1 for simplicity.
