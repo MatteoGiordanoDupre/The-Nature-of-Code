@@ -1,0 +1,70 @@
+let mover;
+
+function setup() {
+  createCanvas(800, 600);
+  mover = new Mover();
+}
+
+function draw() {
+  background(255);
+  let mouse = createVector(mouseX, mouseY);
+  let force = p5.Vector.sub(mouse, mover.position);
+  force.setMag(0.2);
+  
+  mover.applyForce(force);
+  mover.edgeRepel();
+  mover.update();
+  mover.display();
+}
+
+class Mover {
+  constructor() {
+    this.position = createVector(width / 2, height / 2);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+    this.mass = 1;
+  }
+
+  applyForce(force) {
+    let f = p5.Vector.div(force, this.mass);
+    this.acceleration.add(f);
+  }
+
+  edgeRepel() {
+    let edgeThreshold = 100; // distance from edge where force kicks in
+    let repelForce = createVector(0, 0);
+
+    
+    if (this.position.x < edgeThreshold) {
+      let strength = map(this.position.x, 0, edgeThreshold, 1, 0);
+      repelForce.x = (edgeThreshold - this.position.x) * 0.1 * strength;
+    } else if (this.position.x > width - edgeThreshold) {
+      let strength = map(this.position.x, width - edgeThreshold, width, 0, 1);
+      repelForce.x = -(this.position.x - (width - edgeThreshold)) * 0.1 * strength;
+    }
+
+    if (this.position.y < edgeThreshold) {
+      let strength = map(this.position.y, 0, edgeThreshold, 1, 0);
+      repelForce.y = (edgeThreshold - this.position.y) * 0.1 * strength;
+    } else if (this.position.y > height - edgeThreshold) {
+      let strength = map(this.position.y, height - edgeThreshold, height, 0, 1);
+      repelForce.y = -(this.position.y - (height - edgeThreshold)) * 0.1 * strength;
+    }
+
+    this.applyForce(repelForce);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+    this.velocity.limit(5);
+  }
+
+  display() {
+    stroke(0);
+    strokeWeight(2);
+    fill(127);
+    ellipse(this.position.x, this.position.y, 48, 48);
+  }
+}
