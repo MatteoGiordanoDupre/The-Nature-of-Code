@@ -6,7 +6,7 @@ let mover;
 
 function setup() {
   createCanvas(800, 600);
-  mover = new Mover();
+  mover = new Mover(48);
 }
 
 function draw() {
@@ -22,11 +22,12 @@ function draw() {
 }
 
 class Mover {
-  constructor() {
+  constructor(size) {
     this.position = createVector(width / 2, height / 2);
     this.velocity = createVector(0, 0);
     this.acceleration = createVector(0, 0);
     this.mass = 1;
+    this.size = size;
   }
 
   applyForce(force) {
@@ -35,7 +36,7 @@ class Mover {
   }
 
   edgeRepel() {
-    let edgeThreshold = 100; // distance from edge where force kicks in
+    let edgeThreshold = this.size; // distance from edge where force kicks in
     let repelForce = createVector(0, 0);
 
     
@@ -69,6 +70,6 @@ class Mover {
     stroke(0);
     strokeWeight(2);
     fill(127);
-    ellipse(this.position.x, this.position.y, 48, 48);
+    ellipse(this.position.x, this.position.y, this.size, this.size);
   }
 }
