@@ -1,6 +1,12 @@
-//Instead of objects bouncing off the edge of the wall, create an example that includes an invisible force pushing back on the objects 
+//Ex. 2.3: Instead of objects bouncing off the edge of the wall, create an example that includes an invisible force pushing back on the objects 
 //to keep them in the window. Can you weight the force according to the object’s distance from an edge so that the closer it is, the 
 //stronger the force?
+
+//Ex. 2.4: Fix the bouncing off the sides of the canvas so that the circle changes direction when its edge hits the side, rather than 
+//its center.  
+
+
+
 
 let mover;
 
@@ -27,7 +33,7 @@ class Mover {
     this.velocity = createVector(0, 0);
     this.acceleration = createVector(0, 0);
     this.mass = 1;
-    this.size = size;
+    this.size = size; //adding a size attribute
   }
 
   applyForce(force) {
@@ -36,7 +42,7 @@ class Mover {
   }
 
   edgeRepel() {
-    let edgeThreshold = this.size; // distance from edge where force kicks in
+    let edgeThreshold = this.size; // setting the threshold according to the size of the ball, to solve ex. 2.4
     let repelForce = createVector(0, 0);
 
     
