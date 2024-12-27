@@ -4,6 +4,9 @@
 //method?
 
 //We add a bounce and friction argument to the constructor, so that we can specify them at creation
+//This simulation allows for discrete control of the bounce and friction factor, allowing to simulate objects of different
+//materials. If we wanted to simulate objects all made from the same material, we could just define bounce and friction
+//as functions of mass.
 
 class Mover {
   constructor(x, y, mass, bounce, frictionCoeff) {
