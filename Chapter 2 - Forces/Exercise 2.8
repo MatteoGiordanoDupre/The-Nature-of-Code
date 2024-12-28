@@ -1,0 +1,114 @@
+// You might notice that if you set the coefficient of drag too high in Example 2.5, the circles may bounce off of the liquid! 
+//This is due to the inaccuracy of the large time steps that I mentioned earlier in this chapter. A drag force will cause an object to stop
+//but never to reverse direction. How can you use the vector limit() method to correct this issue? 
+//You might also try dropping the objects from variable heights. How does this affect the drag as they hit the liquid?
+
+//the movers keep bouncing when c is higher than 0.1. I think this is happening because in those cases where the drag force is higher than 
+//gravity
+
+
+let movers = [];  
+let liquid;      
+
+function setup() {
+  createCanvas(800, 600);
+  liquid = new Liquid(0, height / 2, width, height / 2, 0.5); 
+
+  // Create multiple movers with random masses and space them equally
+  let spacing = width / 6;
+  for (let i = 0; i < 5; i++) {
+    movers.push(new Mover(random(1, 4), (i + 1) * spacing, 0));
+  }
+}
+
+function draw() {
+  background(255);
+  liquid.display();
+
+  for (let mover of movers) {
+    // Apply gravity
+    let gravity = createVector(0, 0.1 * mover.mass);
+    mover.applyForce(gravity);
+
+    // Apply drag if mover is in liquid
+    if (liquid.contains(mover)) {
+      let dragForce = liquid.calculateDrag(mover);
+      dragForce.limit(gravity)
+      mover.applyForce(dragForce);
+    }
+
+    // Update and display movers
+    mover.update();
+    mover.checkEdges();
+    mover.display();
+  }
+}
+
+// Liquid class
+class Liquid {
+  constructor(x, y, w, h, c) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.c = c;  // Drag coefficient
+  }
+
+  contains(mover) {
+    let pos = mover.position;
+    return (pos.y > this.y && pos.y < this.y + this.h &&
+            pos.x > this.x && pos.x < this.x + this.w);
+  }
+
+  calculateDrag(mover) {
+    let speed = mover.velocity.mag();
+    let dragMagnitude = this.c * speed * speed;
+    // Drag direction is opposite to velocity
+    let dragForce = mover.velocity.copy();
+    dragForce.mult(-1);
+    dragForce.setMag(dragMagnitude);
+    return dragForce;
+  }
+
+  display() {
+    noStroke();
+    fill(50, 100, 150, 150);
+    rect(this.x, this.y, this.w, this.h);
+  }
+}
+
+// Mover class
+class Mover {
+  constructor(m, x, y) {
+    this.mass = m;
+    this.position = createVector(x, y);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+    this.radius = m * 16;
+  }
+
+  applyForce(force) {
+    let f = p5.Vector.div(force, this.mass);
+    this.acceleration.add(f);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  display() {
+    stroke(0);
+    strokeWeight(2);
+    fill(127, 200);
+    ellipse(this.position.x, this.position.y, this.radius, this.radius);
+  }
+
+  checkEdges() {
+    if (this.position.y > height - this.radius / 2) {
+      this.velocity.y *= -0.9;  // A little dampening
+      this.position.y = height - this.radius / 2;
+    }
+  }
+}
