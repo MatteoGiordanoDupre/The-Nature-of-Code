@@ -1,0 +1,38 @@
+let angle = 0; // Current angle
+let angularVelocity = 0; // Angular velocity
+let angularAcceleration = 0; // Angular acceleration
+
+function setup() {
+  createCanvas(640, 240);
+}
+
+function draw() {
+  background(255);
+
+  // Calculate angular acceleration based on mouse position
+  angularAcceleration = map(mouseX, 0, width, -0.05, 0.05);
+
+  // Update angular velocity with acceleration
+  angularVelocity += angularAcceleration;
+
+  // Apply drag to slow down over time
+  angularVelocity *= 0.98; // Stronger drag factor to ensure slowing down
+
+  // If angular velocity is very small, stop it completely
+  if (abs(angularVelocity) < 0.001) {
+    angularVelocity = 0;
+  }
+
+  // Update angle with angular velocity
+  angle += angularVelocity;
+
+  // Draw the rotating baton
+  translate(width / 2, height / 2);
+  rotate(angle);
+  stroke(0);
+  strokeWeight(2);
+  line(-50, 0, 50, 0); // Baton
+  fill(127);
+  circle(50, 0, 16); // Circle at one end
+  circle(-50, 0, 16); // Circle at the other end
+}
