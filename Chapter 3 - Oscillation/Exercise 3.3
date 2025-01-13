@@ -1,0 +1,95 @@
+
+
+let cannon; // Cannon object
+let projectiles = []; // Array to hold projectiles
+let gravity;
+
+function setup() {
+  createCanvas(800, 400);
+  cannon = new Cannon(width / 4, height - 50);
+  gravity = createVector(0, 0.2);
+}
+
+function draw() {
+  background(220);
+
+  // Display the cannon
+  cannon.display();
+
+  // Update and display projectiles
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    projectiles[i].applyForce(gravity);
+    projectiles[i].update();
+    projectiles[i].display();
+
+    // Remove projectiles if they go off-screen
+    if (projectiles[i].isOffScreen()) {
+      projectiles.splice(i, 1);
+    }
+  }
+}
+
+function keyPressed() {
+  if (key === ' ') {
+    // Fire a new projectile
+    projectiles.push(cannon.fire());
+  }
+}
+
+// Cannon class
+class Cannon {
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.angle = -PI / 4; // 45-degree angle
+  }
+
+  display() {
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(this.angle);
+    rect(0, -10, 50, 20);
+    pop();
+  }
+
+  fire() {
+    // Create a new projectile with an initial velocity
+    let velocity = p5.Vector.fromAngle(this.angle).mult(10);
+    return new Projectile(this.position.x, this.position.y, velocity);
+  }
+}
+
+// Projectile class
+class Projectile {
+  constructor(x, y, velocity) {
+    this.position = createVector(x, y);
+    this.velocity = velocity;
+    this.acceleration = createVector(0, 0);
+    this.rotation = random(-0.1, 0.1); // Random rotation speed
+    this.angle = 0; // Initial rotation angle
+  }
+
+  applyForce(force) {
+    this.acceleration.add(force);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.angle += this.rotation; // Update rotation angle
+    this.acceleration.mult(0); // Reset acceleration after each frame
+  }
+
+  display() {
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(this.angle);
+    rectMode(CENTER);
+    rect(0, 0, 20, 10);
+    pop();
+  }
+
+  isOffScreen() {
+    return this.position.y > height || this.position.x > width || this.position.x < 0;
+  }
+}
+ 
